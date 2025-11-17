@@ -8,5 +8,5 @@
 import Foundation
 
 enum NetworkEndPoint: String {
-    case exchangeRate = "https://v6.exchangerate-api.com/v6/2484b62340e14a09ebb09f66/latest/UAH"
+    case exchangeRate = "https://v6.exchangerate-api.com/v6/2484b62340e14a09ebb09f66/latest/"
 }

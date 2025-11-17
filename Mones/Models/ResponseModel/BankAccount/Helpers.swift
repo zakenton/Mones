@@ -7,27 +7,27 @@
 
 import Foundation
 
-enum Currency: String, Codable {
-    case usd = "USD"
-    case eur = "EUR"
-    case gbp = "GBP"
-    
-    var currencyChar: String  {
-        switch self {
-        case .usd: return "$"
-        case .eur: return "€"
-        case .gbp: return "£"
-        }
-    }
-    
-    var fullName: String {
-        switch self {
-        case .usd: return "US Dollar"
-        case .eur: return "Euro"
-        case .gbp: return "Britich Pound"
-        }
-    }
-}
+//enum Currency: String, Codable {
+//    case usd = "USD"
+//    case eur = "EUR"
+//    case gbp = "GBP"
+//    
+//    var currencyChar: String  {
+//        switch self {
+//        case .usd: return "$"
+//        case .eur: return "€"
+//        case .gbp: return "£"
+//        }
+//    }
+//    
+//    var fullName: String {
+//        switch self {
+//        case .usd: return "US Dollar"
+//        case .eur: return "Euro"
+//        case .gbp: return "Britich Pound"
+//        }
+//    }
+//}
 
 enum PeymentSystem: String, Codable {
     case visa = "Visa"

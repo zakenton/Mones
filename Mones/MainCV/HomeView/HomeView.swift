@@ -11,6 +11,7 @@ import SwiftData
 struct HomeView: View {
     @State private var gradientAnimation = true
     @StateObject private var cardsViewModel = CardsViewModel()
+    @StateObject private var exchangeViewModel = ExchangeViewModel()
     
     var body: some View {
         ZStack {
@@ -18,6 +19,7 @@ struct HomeView: View {
             VStack {
                 ScrollView() {
                     VStack(alignment: .center, spacing: 30) {
+                        Text(exchangeViewModel.firstCurrencyRate)
                         BankCardView(card: CardsViewModel.mock.selectedCard!)
                         .padding()
                         ControlView()

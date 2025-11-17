@@ -24,7 +24,6 @@ struct Transaction: Identifiable, Codable {
     let recipient: String?
     let reference: String?
     
-    // Инициализатор для удобного создания
     init(
         id: UUID = UUID(),
         name: String,
