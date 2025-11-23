@@ -135,53 +135,41 @@ final class ExchangeViewModel: ObservableObject {
         let firstRate = exchangeRates[firstCurrency] ?? 0.0
         let secondRate = exchangeRates[secondCurrency] ?? 0.0
         
-        // Формула: (1 / rate) чтобы получить сколько базовой валюты нужно для 1 единицы целевой
-        // Например: если 1 UAH = 0.02 EUR, то 1 EUR = 1 / 0.02 = 50 UAH
+        
         if firstRate > 0 {
-            let calculatedFirstRate = baseRate / firstRate
-            firstCurrencyRate = formatRate(calculatedFirstRate, from: firstCurrency, to: selectedToConvert)
+            let calculated = baseRate / firstRate
+            firstCurrencyRate = formatRate(calculated)
         } else {
             firstCurrencyRate = "..."
         }
-        
+
         if secondRate > 0 {
-            let calculatedSecondRate = baseRate / secondRate
-            secondCurrencyRate = formatRate(calculatedSecondRate, from: secondCurrency, to: selectedToConvert)
+            let calculated = baseRate / secondRate
+            secondCurrencyRate = formatRate(calculated)
         } else {
             secondCurrencyRate = "..."
         }
     }
     
-    private func formatRate(_ rate: Double, from fromCurrency: Currency, to toCurrency: Currency) -> String {
-        // Форматируем в зависимости от величины курса
-        if rate >= 1000 {
-            return String(format: "1 %@ = %.0f %@", fromCurrency.rawValue, rate, toCurrency.rawValue)
-        } else if rate >= 100 {
-            return String(format: "1 %@ = %.1f %@", fromCurrency.rawValue, rate, toCurrency.rawValue)
-        } else if rate >= 10 {
-            return String(format: "1 %@ = %.2f %@", fromCurrency.rawValue, rate, toCurrency.rawValue)
-        } else if rate >= 1 {
-            return String(format: "1 %@ = %.3f %@", fromCurrency.rawValue, rate, toCurrency.rawValue)
-        } else {
-            return String(format: "1 %@ = %.4f %@", fromCurrency.rawValue, rate, toCurrency.rawValue)
+    private func formatRate(_ rate: Double) -> String {
+        switch rate {
+        case let r where r >= 1000:
+            return String(format: "%.0f", r)
+        case let r where r >= 100:
+            return String(format: "%.1f", r)
+        case let r where r >= 10:
+            return String(format: "%.2f", r)
+        case let r where r >= 1:
+            return String(format: "%.3f", r)
+        default:
+            return String(format: "%.4f", rate)
         }
     }
+
     
     // MARK: - Helper Methods
     func showPicker(for type: CurrencyPickerType) {
         selectedPickerType = type
         showCurrencyPicker = true
-    }
-    
-    var firstCurrencyDisplay: String {
-        return "\(firstCurrency.flag) \(firstCurrency.rawValue)"
-    }
-    
-    var secondCurrencyDisplay: String {
-        return "\(secondCurrency.flag) \(secondCurrency.rawValue)"
-    }
-    
-    var baseCurrencyDisplay: String {
-        return "\(selectedToConvert.flag) \(selectedToConvert.rawValue)"
     }
 }
