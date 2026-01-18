@@ -6,7 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		903CE5072ED36D02005B7BAB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 90DC82992EAE23560033ED3E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 90DC82A02EAE23560033ED3E;
+			remoteInfo = Mones;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		903CE5032ED36D02005B7BAB /* MonesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MonesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DC82A12EAE23560033ED3E /* Mones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -16,9 +27,21 @@
 			path = Mones;
 			sourceTree = "<group>";
 		};
+		903CE5042ED36D02005B7BAB /* MonesTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MonesTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		903CE5002ED36D02005B7BAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90DC829E2EAE23560033ED3E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				90316F052EBBCEF200E16860 /* Mones */,
+				903CE5042ED36D02005B7BAB /* MonesTests */,
 				90DC82A22EAE23560033ED3E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				90DC82A12EAE23560033ED3E /* Mones.app */,
+				903CE5032ED36D02005B7BAB /* MonesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		903CE5022ED36D02005B7BAB /* MonesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 903CE50B2ED36D02005B7BAB /* Build configuration list for PBXNativeTarget "MonesTests" */;
+			buildPhases = (
+				903CE4FF2ED36D02005B7BAB /* Sources */,
+				903CE5002ED36D02005B7BAB /* Frameworks */,
+				903CE5012ED36D02005B7BAB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				903CE5082ED36D02005B7BAB /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				903CE5042ED36D02005B7BAB /* MonesTests */,
+			);
+			name = MonesTests;
+			packageProductDependencies = (
+			);
+			productName = MonesTests;
+			productReference = 903CE5032ED36D02005B7BAB /* MonesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		90DC82A02EAE23560033ED3E /* Mones */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 90DC82AE2EAE23570033ED3E /* Build configuration list for PBXNativeTarget "Mones" */;
@@ -77,9 +125,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					903CE5022ED36D02005B7BAB = {
+						CreatedOnToolsVersion = 26.0.1;
+						LastSwiftMigration = 2600;
+						TestTargetID = 90DC82A02EAE23560033ED3E;
+					};
 					90DC82A02EAE23560033ED3E = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -100,11 +153,19 @@
 			projectRoot = "";
 			targets = (
 				90DC82A02EAE23560033ED3E /* Mones */,
+				903CE5022ED36D02005B7BAB /* MonesTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		903CE5012ED36D02005B7BAB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90DC829F2EAE23560033ED3E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +176,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		903CE4FF2ED36D02005B7BAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		90DC829D2EAE23560033ED3E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +192,62 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		903CE5082ED36D02005B7BAB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 90DC82A02EAE23560033ED3E /* Mones */;
+			targetProxy = 903CE5072ED36D02005B7BAB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		903CE5092ED36D02005B7BAB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M33598T8MZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "-233.MonesTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mones.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mones";
+			};
+			name = Debug;
+		};
+		903CE50A2ED36D02005B7BAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M33598T8MZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "-233.MonesTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mones.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mones";
+			};
+			name = Release;
+		};
 		90DC82AC2EAE23570033ED3E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -307,6 +430,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		903CE50B2ED36D02005B7BAB /* Build configuration list for PBXNativeTarget "MonesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				903CE5092ED36D02005B7BAB /* Debug */,
+				903CE50A2ED36D02005B7BAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		90DC829C2EAE23560033ED3E /* Build configuration list for PBXProject "Mones" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

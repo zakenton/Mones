@@ -13,6 +13,7 @@ enum CurrencyPickerType {
 }
 
 final class ExchangeViewModel: ObservableObject {
+    // MARK: - Published Properties
     @Published var firstCurrency: Currency = .eur
     @Published var secondCurrency: Currency = .gbp
     @Published var selectedToConvert: Currency = .uah
@@ -27,43 +28,57 @@ final class ExchangeViewModel: ObservableObject {
     @Published var secondCurrencyRate: String = ""
     
     // MARK: - Private Properties
-    private var exchangeRates: [Currency: Double] = [:]
+    private var conversionRates: [Currency: Double] = [:]
     private var cancellables = Set<AnyCancellable>()
-    private var networkManager = NetworkManager.shared
+    private let networkManager = NetworkManager.shared
     
     // MARK: - Init
     init() {
-        setupBinding()
+        setupBindings()
         fetchExchangeRates()
     }
     
-    private func setupBinding() {
-        // Обновляем курсы при изменении выбранных валют
+    deinit {
+        cancellables.removeAll()
+    }
+}
+
+// MARK: - Setup & Bindings
+extension ExchangeViewModel {
+    private func setupBindings() {
+        // Update rates when currencies change
         Publishers.CombineLatest($firstCurrency, $secondCurrency)
             .sink { [weak self] _ in
-                self?.updateRates()
+                self?.updateConversionRates()
             }
             .store(in: &cancellables)
         
-        // При изменении базовой валюты автоматически делаем новый запрос к API
+        // Fetch new rates when base currency changes
         $selectedToConvert
-            .dropFirst() // Пропускаем initial value при инициализации
-            .sink { [weak self] newBaseCurrency in
+            .dropFirst()
+            .sink { [weak self] _ in
                 self?.fetchExchangeRates()
             }
             .store(in: &cancellables)
         
+        // Handle errors
         $error
-            .compactMap { $0 } // Игнорируем nil
+            .compactMap { $0 }
             .sink { errorMessage in
-                print("Error: \(errorMessage)")
+                print("Exchange Error: \(errorMessage)")
             }
             .store(in: &cancellables)
     }
-    
+}
+
+// MARK: - Network Operations
+extension ExchangeViewModel {
     func fetchExchangeRates() {
+        guard !isLoading else { return }
+        
         isLoading = true
         error = nil
+        
         networkManager.fetchExchangeRate(for: selectedToConvert)
         
         networkManager.exchangeRatePublisher
@@ -72,104 +87,104 @@ final class ExchangeViewModel: ObservableObject {
                 self?.isLoading = false
                 if case .failure(let error) = completion {
                     self?.error = error.localizedDescription
+                    self?.resetRates()
                 }
-            } receiveValue: { [weak self] exchangeRates in
-                self?.exchangeRates = exchangeRates
+            } receiveValue: { [weak self] rates in
+                self?.conversionRates = rates
                 self?.isLoading = false
                 self?.error = nil
-                self?.updateRates()
+                self?.updateConversionRates()
             }
             .store(in: &cancellables)
     }
     
-    func selectCurrency(_ currency: Currency, for type: CurrencyPickerType) {
-        let oldFirst = firstCurrency
-        let oldSecond = secondCurrency
-        let oldBase = selectedToConvert
-        
-        switch type {
-        case .first:
-            firstCurrency = currency
-            // Если новая первая валюта совпадает со второй - меняем вторую на старую первую
-            if firstCurrency == secondCurrency {
-                secondCurrency = oldFirst
-            }
-            // Если новая первая валюта совпадает с базовой - меняем базовую на старую первую
-            if firstCurrency == selectedToConvert {
-                selectedToConvert = oldFirst
-            }
-            
-        case .second:
-            secondCurrency = currency
-            // Если новая вторая валюта совпадает с первой - меняем первую на старую вторую
-            if secondCurrency == firstCurrency {
-                firstCurrency = oldSecond
-            }
-            // Если новая вторая валюта совпадает с базовой - меняем базовую на старую вторую
-            if secondCurrency == selectedToConvert {
-                selectedToConvert = oldSecond
-            }
-            
-        case .toConvert:
-            selectedToConvert = currency
-            // Если новая базовая валюта совпадает с первой - меняем первую на старую базовую
-            if selectedToConvert == firstCurrency {
-                firstCurrency = oldBase
-            }
-            // Если новая базовая валюта совпадает со второй - меняем вторую на старую базовую
-            if selectedToConvert == secondCurrency {
-                secondCurrency = oldBase
-            }
-        }
-        
-        updateRates()
-        showCurrencyPicker = false
+    private func resetRates() {
+        firstCurrencyRate = "..."
+        secondCurrencyRate = "..."
     }
-    
-    private func updateRates() {
-        
-        // Получаем курс базовой валюты к самой себе (всегда 1)
-        let baseRate = 1.0
-        
-        // Вычисляем, сколько единиц базовой валюты нужно для 1 единицы каждой из выбранных валют
-        let firstRate = exchangeRates[firstCurrency] ?? 0.0
-        let secondRate = exchangeRates[secondCurrency] ?? 0.0
-        
-        
-        if firstRate > 0 {
-            let calculated = baseRate / firstRate
-            firstCurrencyRate = formatRate(calculated)
-        } else {
-            firstCurrencyRate = "..."
-        }
+}
 
-        if secondRate > 0 {
-            let calculated = baseRate / secondRate
-            secondCurrencyRate = formatRate(calculated)
-        } else {
-            secondCurrencyRate = "..."
-        }
-    }
-    
-    private func formatRate(_ rate: Double) -> String {
-        switch rate {
-        case let r where r >= 1000:
-            return String(format: "%.0f", r)
-        case let r where r >= 100:
-            return String(format: "%.1f", r)
-        case let r where r >= 10:
-            return String(format: "%.2f", r)
-        case let r where r >= 1:
-            return String(format: "%.3f", r)
-        default:
-            return String(format: "%.4f", rate)
-        }
-    }
-
-    
-    // MARK: - Helper Methods
+// MARK: - Currency Selection & Conflict Resolution
+extension ExchangeViewModel {
     func showPicker(for type: CurrencyPickerType) {
         selectedPickerType = type
         showCurrencyPicker = true
+    }
+    
+    func selectCurrency(_ currency: Currency, for type: CurrencyPickerType) {
+        switch type {
+        case .first:
+            firstCurrency = currency
+        case .second:
+            secondCurrency = currency
+        case .toConvert:
+            selectedToConvert = currency
+        }
+        
+        resolveCurrencyConflicts()
+        updateConversionRates()
+        showCurrencyPicker = false
+    }
+    
+    private func resolveCurrencyConflicts() {
+        // Prevent same currency selection
+        if firstCurrency == secondCurrency {
+            secondCurrency = findAlternativeCurrency(for: secondCurrency, excluding: [firstCurrency, selectedToConvert])
+        }
+        
+        if selectedToConvert == firstCurrency || selectedToConvert == secondCurrency {
+            selectedToConvert = findAlternativeCurrency(for: selectedToConvert, excluding: [firstCurrency, secondCurrency])
+        }
+    }
+    
+    private func findAlternativeCurrency(
+        for currency: Currency,
+        excluding excludedCurrencies: [Currency]
+    ) -> Currency {
+        let allCurrencies = Currency.allCases
+        let availableCurrencies = allCurrencies.filter { !excludedCurrencies.contains($0) }
+        return availableCurrencies.first ?? .usd
+    }
+}
+
+// MARK: - Rate Calculations
+extension ExchangeViewModel {
+    private func updateConversionRates() {
+        guard !conversionRates.isEmpty else {
+            resetRates()
+            return
+        }
+        
+        firstCurrencyRate = calculateRate(for: firstCurrency)
+        secondCurrencyRate = calculateRate(for: secondCurrency)
+    }
+    
+    private func calculateRate(for targetCurrency: Currency) -> String {
+        guard let targetRate = conversionRates[targetCurrency],
+              let baseRate = conversionRates[selectedToConvert],
+              baseRate > 0, targetRate > 0 else {
+            return "..."
+        }
+        
+        let conversionRate = targetRate / baseRate
+        return formatConversionRate(conversionRate, targetCurrency: targetCurrency)
+    }
+    
+    private func formatConversionRate(_ rate: Double, targetCurrency: Currency) -> String {
+        let formattedRate = formatRateValue(rate)
+        return "1 \(selectedToConvert.rawValue) = \(formattedRate) \(targetCurrency.rawValue)"
+    }
+    
+    private func formatRateValue(_ rate: Double) -> String {
+        switch rate {
+        case ...0.0001: return String(format: "%.6f", rate)
+        case ...0.001: return String(format: "%.5f", rate)
+        case ...0.01: return String(format: "%.4f", rate)
+        case ...0.1: return String(format: "%.3f", rate)
+        case ...1: return String(format: "%.3f", rate)
+        case ...10: return String(format: "%.2f", rate)
+        case ...100: return String(format: "%.1f", rate)
+        default: return String(format: "%.0f", rate)
+        }
     }
 }
